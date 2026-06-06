@@ -1,13 +1,9 @@
-DEFAULT_USER_AGENT = (
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-    'AppleWebKit/537.36 (KHTML, like Gecko) '
-    'Chrome/124.0.0.0 Safari/537.36'
-)
+from core.settings import app_config
 
 
-def build_headers(accept_language=None, extra_headers=None):
+def build_headers(accept_language=None, extra_headers=None, user_agent=None):
     headers = {
-        'User-Agent': DEFAULT_USER_AGENT
+        'User-Agent': user_agent or app_config.scraper_user_agent
     }
 
     if accept_language:

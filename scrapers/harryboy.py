@@ -1,4 +1,3 @@
-from core.http import build_headers
 from core.registry import register_scraper
 from scrapers.families.sitemap_jsonld import SitemapJsonLdScraper
 
@@ -11,8 +10,6 @@ class HarryboyScraper(SitemapJsonLdScraper):
     sitemap_url = f'{base_url}Sitemap/sitemap_ShopSalePage.xml.gz'
     sitemap_is_gzipped = True
     output_file = 'harryboy.csv'
-    headers = build_headers('zh-TW,zh-Hant;q=0.9,en-US;q=0.8,en;q=0.7')
-    timeout = 10
     delay = 0.2
 
     def extract_product_urls_from_sitemap(self, root):

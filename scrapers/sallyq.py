@@ -1,6 +1,5 @@
 from urllib.parse import urljoin
 
-from core.http import build_headers
 from core.models import ScrapeTarget
 from core.registry import register_scraper
 from core.utils import normalize_url
@@ -13,10 +12,6 @@ class SallyqScraper(WooCommerceScraper):
     display_name = 'SallyQ'
     base_url = 'https://www.sallyq.com.tw/'
     output_file = 'sallyq.csv'
-    headers = build_headers()
-    timeout = 10
-    delay = 1
-    max_pages = 100
 
     def get_target_urls(self):
         targets = [ScrapeTarget(url=self.base_url, label='homepage', paginate=False)]
@@ -41,7 +36,7 @@ class SallyqScraper(WooCommerceScraper):
             seen_urls.add(full_url)
             category_urls.append(full_url)
 
-        for url in category_urls[:50]:
+        for url in category_urls[:self.max_categories]:
             targets.append(ScrapeTarget(url=url, label='category', paginate=True))
 
         return targets

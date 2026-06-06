@@ -1,4 +1,3 @@
-from core.http import build_headers
 from core.registry import register_scraper
 from scrapers.families.sitemap_jsonld import SitemapJsonLdScraper
 
@@ -10,9 +9,6 @@ class LeloScraper(SitemapJsonLdScraper):
     base_url = 'https://www.lelo.com/zh-hans'
     sitemap_url = 'https://www.lelo.com/sitemap.xml'
     output_file = 'lelo.csv'
-    headers = build_headers('zh-CN,zh-Hans;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6')
-    timeout = 10
-    delay = 1
 
     def extract_product_urls_from_sitemap(self, root):
         product_urls = []

@@ -6,7 +6,9 @@ import requests
 from bs4 import BeautifulSoup
 
 from core.csv_io import write_products_csv
+from core.http import build_headers
 from core.models import ScrapeTarget
+from core.settings import app_config
 from core.utils import dedupe_products
 
 
@@ -15,14 +17,24 @@ class BaseScraper(ABC):
     display_name = ''
     base_url = ''
     output_file = ''
-    headers = {}
-    timeout = 10
-    delay = 1.0
-    max_pages = 100
+    extra_headers = None
+    accept_language = None
+    timeout = None
+    delay = None
+    max_pages = None
+    max_categories = None
     default_output_dir = Path('data/items')
 
     def __init__(self, output_dir=None):
         self.output_dir = Path(output_dir or self.default_output_dir)
+        self.timeout = app_config.get_scraper_timeout(self.store_name, self.timeout)
+        self.delay = app_config.get_scraper_delay(self.store_name, self.delay)
+        self.max_pages = app_config.get_scraper_max_pages(self.store_name, self.max_pages)
+        self.max_categories = app_config.get_scraper_max_categories(self.store_name, self.max_categories)
+        self.headers = build_headers(
+            accept_language=app_config.get_scraper_accept_language(self.store_name, self.accept_language),
+            extra_headers=self.extra_headers,
+        )
         self.session = requests.Session()
         self.session.headers.update(self.headers)
 

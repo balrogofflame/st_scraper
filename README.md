@@ -23,26 +23,20 @@ ST(Sex Toys) Scraper collects product pricing data from multiple adult-toy store
 
 ## Getting Started
 
-### 1. Create or activate a virtual environment
-
-If you already have the project venv:
+### 1. Create the Conda environment
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+conda env create -f environment.yml
+conda activate st-scraper
 ```
 
-If you need to create one:
+### 2. Create your local scraper config
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+Copy-Item .env.example .env
 ```
 
-### 2. Install dependencies
-
-```powershell
-pip install -r requirements.txt
-```
+You can leave `.env` absent if the built-in defaults are fine.
 
 ### 3. Add your exchange-rate API key
 
@@ -61,11 +55,12 @@ Recommended environment:
 - Operating system: Windows 10 or Windows 11
 - Shell: PowerShell
 - Python: 3.12
-- Virtual environment: `.venv`
+- Environment and dependency manager: Conda
 
 Project/runtime requirements:
 
 - Internet access is needed for live scraping and for refreshing exchange-rate data
+- Optional local overrides can be stored in `.env`
 - [assets/store_logos](C:/Users/user/source/st_scraper/assets/store_logos) must be present for logo-based charts
 - A valid key in [config/exchangerate_api.txt](C:/Users/user/source/st_scraper/config/exchangerate_api.txt) is recommended when exchange-rate cache files are stale or missing
 - Enough free disk space for CSV outputs, generated SVG/PNG charts, and the virtual environment
@@ -127,15 +122,18 @@ python -m unittest discover -s tests -v
 
 ## Important Run Order (for non-technical users)
 
+Conda is used to create and manage the project's Python environment. It ensures the correct Python version and dependencies are installed and isolated from your system Python, which prevents conflicts and makes the project reproducible. Download and install Anaconda (or Miniconda) from https://www.anaconda.com/download before proceeding.
+
 The order of running `main.py` matters.
 
 If you are new to working with a repository, do not treat the commands as interchangeable. A later step depends on files created by an earlier step.
 
 Recommended order:
 
-1. `python main.py scrape ...`
-2. `python main.py stats`
-3. `python main.py plot-pricing`
+1. `conda activate st-scraper`
+2. `python main.py scrape ...`
+3. `python main.py stats`
+4. `python main.py plot-pricing`
 
 Why this matters:
 

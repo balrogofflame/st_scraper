@@ -4,6 +4,8 @@ from pathlib import Path
 
 import requests
 
+from core.settings import app_config
+
 
 class ExchangeRateService:
     def __init__(
@@ -58,7 +60,7 @@ class ExchangeRateService:
         url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}'
 
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=app_config.exchange_rate_timeout)
             response.raise_for_status()
             data = response.json()
 
