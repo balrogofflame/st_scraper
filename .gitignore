@@ -1,0 +1,9 @@
+.venv/
+
+__pycache__/
+*.py[cod]
+
+config/exchangerate_api.txt
+
+.DS_Store
+Thumbs.db
