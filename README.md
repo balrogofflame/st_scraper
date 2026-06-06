@@ -6,7 +6,7 @@ ST(Sex Toys) Scraper collects product pricing data from multiple adult-toy store
 
 - Scrapes product names and prices from multiple stores under [scrapers](scrapers)
 - Saves store-level product data to [data/items](data/items)
-- Calculates pricing summaries such as mean, median, and standard deviation into [data/reports/st_stats.csv](data/reports/st_stats.csv)
+- Calculates pricing summaries such as mean, median, and standard deviation into [data/reports/st_stats.csv](data/reports/st_stats.csv) `[generated]`
 - Builds pricing charts, including the gender-imagery pricing chart, from the stats report
 
 ## Project Structure
@@ -15,13 +15,15 @@ ST(Sex Toys) Scraper collects product pricing data from multiple adult-toy store
 - [scrapers](scrapers): store-specific scraper modules
 - [core](core): shared scraping infrastructure
 - [stats](stats): stats calculation and plotting logic
-- [data/items](data/items): scraped CSV outputs
-- [data/reports](data/reports): generated reports and charts
+- [data/items](data/items): scraped CSV outputs `[generated]`
+- [data/reports](data/reports): generated reports and charts `[generated]`
 - [assets/store_logos](assets/store_logos): store logo assets
 - [config/exchangerate_api.txt](config/exchangerate_api.txt): exchange-rate API key
 - [config/gender_imagery_score.csv](config/gender_imagery_score.csv): store gender imagery scores
 
 ## Getting Started
+
+`[generated]` means the file or folder is created later by running the project, so it may not exist right after cloning.
 
 ### 1. Create the Conda environment
 
@@ -72,8 +74,8 @@ Before running commands, make sure these files and folders exist:
 - [main.py](main.py)
 - [config/gender_imagery_score.csv](config/gender_imagery_score.csv)
 - [assets/store_logos](assets/store_logos)
-- [data/items](data/items) if you want to run `stats` on existing scraped data
-- [data/reports/st_stats.csv](data/reports/st_stats.csv) if you want to run `plot-pricing` on an existing stats report
+- [data/items](data/items) `[generated]` if you want to run `stats` on existing scraped data
+- [data/reports/st_stats.csv](data/reports/st_stats.csv) `[generated]` if you want to run `plot-pricing` on an existing stats report
 
 Also check [config/exchangerate_api.txt](config/exchangerate_api.txt):
 
@@ -116,9 +118,9 @@ python -m unittest discover -s tests -v
 
 ## Output Files
 
-- Store CSVs: [data/items](data/items)
-- Stats report: [data/reports/st_stats.csv](data/reports/st_stats.csv)
-- Pricing chart: [data/reports/store_pricing_min.svg](data/reports/store_pricing_min.svg)
+- Store CSVs: [data/items](data/items) `[generated]`
+- Stats report: [data/reports/st_stats.csv](data/reports/st_stats.csv) `[generated]`
+- Pricing chart: [data/reports/store_pricing_min.svg](data/reports/store_pricing_min.svg) `[generated]`
 
 ## Important Run Order (for non-technical users)
 

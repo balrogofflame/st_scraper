@@ -1,6 +1,11 @@
 .venv/
 .env
 
+data/cache/
+data/items/*.csv
+data/reports/*
+!data/reports/store_pricing_min_sample.svg
+
 __pycache__/
 *.py[cod]
 
