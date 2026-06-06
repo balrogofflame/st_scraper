@@ -16,8 +16,12 @@ class ExchangeRateService:
         self.cache_dir = Path(cache_dir)
         self.target_currency = target_currency
         self.memory_cache = {}
+        self.warned_currencies = set()
 
     def read_api_key(self):
+        if not self.api_key_file.exists():
+            return ''
+
         return self.api_key_file.read_text(encoding='utf-8').strip()
 
     def get_cache_file(self, currency_code):
@@ -44,6 +48,13 @@ class ExchangeRateService:
             return data
 
         api_key = self.read_api_key()
+
+        if not api_key and cache_file.exists():
+            self.warn_stale_cache_usage(base_currency, cache_file)
+            data = json.loads(cache_file.read_text(encoding='utf-8'))
+            self.memory_cache[base_currency] = data
+            return data
+
         url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}'
 
         try:
@@ -65,11 +76,23 @@ class ExchangeRateService:
             return data
         except Exception:
             if cache_file.exists():
+                self.warn_stale_cache_usage(base_currency, cache_file)
                 data = json.loads(cache_file.read_text(encoding='utf-8'))
                 self.memory_cache[base_currency] = data
                 return data
 
             raise
+
+    def warn_stale_cache_usage(self, base_currency, cache_file):
+        if base_currency in self.warned_currencies:
+            return
+
+        cache_date = datetime.fromtimestamp(cache_file.stat().st_mtime).date().isoformat()
+        print(
+            f'Warning: using stale exchange rate cache for {base_currency} '
+            f'from {cache_date}.'
+        )
+        self.warned_currencies.add(base_currency)
 
     def convert_amount_to_target(self, amount, currency_code):
         if currency_code == self.target_currency:

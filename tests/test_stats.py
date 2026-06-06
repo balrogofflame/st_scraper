@@ -1,9 +1,13 @@
+import io
+import json
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 
 from stats.calculator import calculate_store_stats, get_selected_csv_files, load_store_prices
+from stats.exchange_rates import ExchangeRateService
 from stats.price_parser import extract_max_price, extract_min_price
 
 
@@ -60,6 +64,39 @@ class StatsTestCase(unittest.TestCase):
 
             selected_files = get_selected_csv_files(args)
             self.assertEqual([path.name for path in selected_files], ['a.csv'])
+
+    def test_exchange_rates_use_stale_cache_without_api_key(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            api_key_file = root / 'missing_api_key.txt'
+            cache_dir = root / 'cache'
+            cache_dir.mkdir()
+            cache_file = cache_dir / 'EUR.json'
+            cache_file.write_text(
+                json.dumps({
+                    'result': 'success',
+                    'conversion_rates': {
+                        'TWD': 40
+                    }
+                }),
+                encoding='utf-8'
+            )
+            stale_timestamp = 946684800
+            cache_file.touch()
+            import os
+            os.utime(cache_file, (stale_timestamp, stale_timestamp))
+
+            service = ExchangeRateService(
+                api_key_file=api_key_file,
+                cache_dir=cache_dir
+            )
+            output = io.StringIO()
+
+            with redirect_stdout(output):
+                converted_amount = service.convert_amount_to_target(10, 'EUR')
+
+            self.assertEqual(converted_amount, 400)
+            self.assertIn('Warning: using stale exchange rate cache for EUR', output.getvalue())
 
 
 if __name__ == '__main__':

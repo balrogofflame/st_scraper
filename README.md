@@ -54,6 +54,23 @@ config/exchangerate_api.txt
 
 This is used when converting non-TWD prices during stats generation.
 
+## Required Files Check
+
+Before running commands, make sure these files and folders exist:
+
+- [main.py](C:/Users/user/source/st_scraper/main.py)
+- [config/gender_schema.csv](C:/Users/user/source/st_scraper/config/gender_schema.csv)
+- [assets/store_logos](C:/Users/user/source/st_scraper/assets/store_logos)
+- [data/items](C:/Users/user/source/st_scraper/data/items) if you want to run `stats` on existing scraped data
+- [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv) if you want to run `plot-pricing` on an existing stats report
+
+Also check [config/exchangerate_api.txt](C:/Users/user/source/st_scraper/config/exchangerate_api.txt):
+
+- If it exists and contains a valid key, exchange rates can be refreshed
+- If it is missing, the project can still work only when a usable cached exchange-rate file already exists in [data/cache/exchange_rates](C:/Users/user/source/st_scraper/data/cache/exchange_rates)
+
+If one of these required files is missing, commands such as `stats` or `plot-pricing` may fail or produce incomplete output.
+
 ## Common Commands
 
 Scrape all stores:
@@ -91,6 +108,37 @@ python -m unittest discover -s tests -v
 - Store CSVs: [data/items](C:/Users/user/source/st_scraper/data/items)
 - Stats report: [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv)
 - Pricing chart: [data/reports/store_pricing_min.svg](C:/Users/user/source/st_scraper/data/reports/store_pricing_min.svg)
+
+## Important Run Order (for non-technical users)
+
+The order of running `main.py` matters.
+
+If you are new to working with a repository, do not treat the commands as interchangeable. A later step depends on files created by an earlier step.
+
+Recommended order:
+
+1. `python main.py scrape ...`
+2. `python main.py stats`
+3. `python main.py plot-pricing`
+
+Why this matters:
+
+- `scrape` creates or updates the store CSV files in [data/items](C:/Users/user/source/st_scraper/data/items)
+- `stats` reads those CSV files and creates [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv)
+- `plot-pricing` reads [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv) and the logo files to create the SVG chart
+
+Possible consequences if you run commands in the wrong order:
+
+- Running `python main.py plot-pricing` before a valid [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv) exists can raise `ValueError('No pricing points found.')`
+- Running `python main.py plot-pricing` when the stats file path is missing can raise `FileNotFoundError`
+- Running `python main.py stats` before the store CSV files exist can produce `No CSV files selected.`
+- Running `python main.py stats missing.csv` can raise `FileNotFoundError`
+- Running `python main.py stats` when exchange-rate data is needed but both the API key and cache are unavailable can fail during currency conversion
+
+In short:
+
+- Do not run `plot-pricing` before `stats` unless [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv) already exists and contains valid data
+- Do not run `stats` before `scrape` unless [data/items](C:/Users/user/source/st_scraper/data/items) already contains the CSV files you want to analyze
 
 ## Contributor
 
