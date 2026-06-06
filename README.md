@@ -7,7 +7,7 @@ ST(Sex Toys) Scraper collects product pricing data from multiple adult-toy store
 - Scrapes product names and prices from multiple stores under [scrapers](C:/Users/user/source/st_scraper/scrapers)
 - Saves store-level product data to [data/items](C:/Users/user/source/st_scraper/data/items)
 - Calculates pricing summaries such as mean, median, and standard deviation into [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv)
-- Builds pricing charts, including the gender-schema pricing chart, from the stats report
+- Builds pricing charts, including the gender-imagery pricing chart, from the stats report
 
 ## Project Structure
 
@@ -19,7 +19,7 @@ ST(Sex Toys) Scraper collects product pricing data from multiple adult-toy store
 - [data/reports](C:/Users/user/source/st_scraper/data/reports): generated reports and charts
 - [assets/store_logos](C:/Users/user/source/st_scraper/assets/store_logos): store logo assets
 - [config/exchangerate_api.txt](C:/Users/user/source/st_scraper/config/exchangerate_api.txt): exchange-rate API key
-- [config/gender_schema.csv](C:/Users/user/source/st_scraper/config/gender_schema.csv): store gender-schema scores
+- [config/gender_imagery_score.csv](C:/Users/user/source/st_scraper/config/gender_imagery_score.csv): store gender imagery scores
 
 ## Getting Started
 
@@ -54,12 +54,28 @@ config/exchangerate_api.txt
 
 This is used when converting non-TWD prices during stats generation.
 
+## System Specifications
+
+Recommended environment:
+
+- Operating system: Windows 10 or Windows 11
+- Shell: PowerShell
+- Python: 3.12
+- Virtual environment: `.venv`
+
+Project/runtime requirements:
+
+- Internet access is needed for live scraping and for refreshing exchange-rate data
+- [assets/store_logos](C:/Users/user/source/st_scraper/assets/store_logos) must be present for logo-based charts
+- A valid key in [config/exchangerate_api.txt](C:/Users/user/source/st_scraper/config/exchangerate_api.txt) is recommended when exchange-rate cache files are stale or missing
+- Enough free disk space for CSV outputs, generated SVG/PNG charts, and the virtual environment
+
 ## Required Files Check
 
 Before running commands, make sure these files and folders exist:
 
 - [main.py](C:/Users/user/source/st_scraper/main.py)
-- [config/gender_schema.csv](C:/Users/user/source/st_scraper/config/gender_schema.csv)
+- [config/gender_imagery_score.csv](C:/Users/user/source/st_scraper/config/gender_imagery_score.csv)
 - [assets/store_logos](C:/Users/user/source/st_scraper/assets/store_logos)
 - [data/items](C:/Users/user/source/st_scraper/data/items) if you want to run `stats` on existing scraped data
 - [data/reports/st_stats.csv](C:/Users/user/source/st_scraper/data/reports/st_stats.csv) if you want to run `plot-pricing` on an existing stats report

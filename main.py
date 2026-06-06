@@ -4,7 +4,7 @@ from pathlib import Path
 import scrapers
 from core.registry import get_scraper_class, list_scrapers
 from stats.cli import run_stats
-from stats.plot_pricing import create_pricing_plot
+from stats.plot_pricing import COMBINED_OUTPUT, PNG_FORMAT, SPLIT_OUTPUT, SVG_FORMAT, create_pricing_plot
 
 
 def build_parser():
@@ -76,18 +76,30 @@ def build_parser():
         help='Directory containing store logo PNG files.'
     )
     plot_parser.add_argument(
-        '--gender-schema-file',
+        '--gender-imagery-score-file',
         '-g',
         type=Path,
-        default=Path('config/gender_schema.csv'),
-        help='CSV file containing store gender schema scores.'
+        default=Path('config/gender_imagery_score.csv'),
+        help='CSV file containing store gender imagery scores.'
     )
     plot_parser.add_argument(
         '--output-file',
         '-o',
         type=Path,
         default=Path('data/reports/store_pricing_min.svg'),
-        help='Output SVG file.'
+        help='Output file or base file name.'
+    )
+    plot_parser.add_argument(
+        '--output-mode',
+        choices=[COMBINED_OUTPUT, SPLIT_OUTPUT],
+        default=COMBINED_OUTPUT,
+        help='Write all plots into one file or split them into multiple files.'
+    )
+    plot_parser.add_argument(
+        '--output-format',
+        choices=[SVG_FORMAT, PNG_FORMAT],
+        default=SVG_FORMAT,
+        help='Output image format.'
     )
     plot_parser.add_argument(
         '--sort-by',
@@ -141,7 +153,9 @@ def main():
             logo_dir=args.logo_dir,
             output_file=args.output_file,
             sort_by=args.sort_by,
-            gender_schema_file=args.gender_schema_file
+            gender_schema_file=args.gender_imagery_score_file,
+            output_mode=args.output_mode,
+            output_format=args.output_format
         )
         print(f'Saved pricing plot to {output_path}')
         return
